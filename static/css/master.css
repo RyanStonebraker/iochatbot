@@ -1,0 +1,68 @@
+@keyframes wiggle {
+  0% {
+    transform: translate(0, 0);
+  }
+  20% {
+    transform: translate(5px, 0);
+  }
+  40% {
+    transform: translate(2px, 5px);
+  }
+  60% {
+    transform: translate(-5px, -2px);
+  }
+  80% {
+    transform: translate(0, -5px);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+body {
+  margin: 0;
+  padding: 0;
+}
+section.stage {
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  background-image: url('/static/img/brain.png');
+  background-size: 50%;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+section.stage article.bot {
+  background-color: lightgrey;
+  width: 20%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  transition: all 0.5s ease;
+  border-radius: 15px;
+  padding: 5px;
+  padding-top: 0;
+}
+section.stage article.bot h1 {
+  margin: 0;
+  margin-bottom: 5px;
+}
+section.stage article.bot textarea {
+  margin: 0;
+  border-radius: 5px;
+  resize: none;
+  width: 90%;
+  height: 50px;
+  outline: none;
+}
+section.stage article.bot.angry {
+  top: 10%;
+  left: 10%;
+}
+div.line {
+  width: 1px;
+  background-color: black;
+  position: absolute;
+  transform-origin: 0% 0%;
+}
