@@ -1,35 +1,38 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
+from chatbot import chatbot
 
 app = Flask(__name__)
 
-@app.route("/")
-def home():
-    agentNames = [
-        "angry",
-        "sad",
-        "happy",
-        "disgust"
-    ]
-
+@app.route("/", methods = ['POST', 'GET'])
+def chat():
     agents = [
         {
             "name": "angry",
-            "response": "testing angry response"
+            "response": ""
         },
         {
             "name": "sad",
-            "response": "testing sad response"
+            "response": ""
         },
         {
             "name": "happy",
-            "response": "testing happy response"
+            "response": ""
         },
         {
             "name": "disgust",
-            "response": "testing disgust response"
+            "response": ""
         }
     ]
-    return render_template("main.html", agents=agents)
+    if request.method == 'POST':
+        query = ""
+        for input, value in request.form.items():
+            if input == "query":
+                query = value
+        for agent in agents:
+            agent["response"] = chatbot.getResponse(agent["name"], query)
+
+    return render_template("main.html", agents=agents, previousQuestion=query)
+
 
 if __name__ == "__main__":
     app.run(debug=True, port=5001)
