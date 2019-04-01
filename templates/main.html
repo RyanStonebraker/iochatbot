@@ -1,2 +1,20 @@
 {% extends "template.html" %}
 {% block title %}Inside Out Chatbot{% endblock %}
+
+{% block body %}
+  <section class="stage">
+    {% for agent in agents %}
+      <article class="bot {{agent.name}}">
+        <h1>{{agent.name}}</h1>
+        <textarea readonly>{{agent.response}}</textarea>
+      </article>
+    {% endfor %}
+    <article class="bot user">
+      <h1>User</h1>
+      <form action="index.html" method="post">
+        <input type="text" name="" value="">
+        <input type="submit"></input>
+      </form>
+    </article>
+  </section>
+{% endblock %}

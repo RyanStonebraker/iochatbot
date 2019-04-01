@@ -38,7 +38,7 @@ section.stage article.bot {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  position: relative;
+  position: absolute;
   transition: all 0.5s ease;
   border-radius: 15px;
   padding: 5px;
@@ -47,6 +47,7 @@ section.stage article.bot {
 section.stage article.bot h1 {
   margin: 0;
   margin-bottom: 5px;
+  text-transform: capitalize;
 }
 section.stage article.bot textarea {
   margin: 0;
@@ -55,10 +56,41 @@ section.stage article.bot textarea {
   width: 90%;
   height: 50px;
   outline: none;
+  text-align: center;
 }
 section.stage article.bot.angry {
-  top: 10%;
+  top: 7%;
   left: 10%;
+  background-color: red;
+}
+section.stage article.bot.happy {
+  top: 11%;
+  right: 16%;
+  background-color: yellow;
+}
+section.stage article.bot.sad {
+  top: 43%;
+  left: 4%;
+  background-color: blue;
+}
+section.stage article.bot.disgust {
+  top: 38%;
+  right: 5%;
+  background-color: green;
+}
+section.stage article.bot.user {
+  bottom: 5%;
+  left: calc(50% - 15%);
+  width: 30%;
+  background-color: lightblue;
+}
+section.stage article.bot.user form {
+  width: 100%;
+  text-align: center;
+}
+section.stage article.bot.user form input {
+  width: 90%;
+  margin-bottom: 5px;
 }
 div.line {
   width: 1px;

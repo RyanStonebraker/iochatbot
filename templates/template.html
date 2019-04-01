@@ -8,11 +8,6 @@
     <script src="{{ url_for('static', filename='js/wiggle.js') }}"></script>
   </head>
   <body>
-    <section class="stage">
-      <article class="bot angry">
-        <h1>Angry</h1>
-        <textarea readonly>Response to input.</textarea>
-      </article>
-    </section>
+    {% block body %}{% endblock %}
   </body>
 </html>
