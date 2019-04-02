@@ -23,8 +23,8 @@ def chat():
             "response": ""
         }
     ]
+    query = ""
     if request.method == 'POST':
-        query = ""
         for input, value in request.form.items():
             if input == "query":
                 query = value

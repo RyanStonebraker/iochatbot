@@ -1,2 +1,8 @@
+from . import agent
+
 def getResponse(agentName, userInput):
-    return "{0} responded".format(agentName)
+    response = agentName
+    if agentName == "sad":
+        sadAgent = agent.Agent()
+        response = sadAgent.chat(userInput).replace("Chatbot: ", "")
+    return response

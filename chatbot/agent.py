@@ -6,7 +6,7 @@ import string
 # Term Frequency-Inverse Document Frequency (TF-IDF)
 # This bag of words heuristic weighs word scores based on the total number of docs
 # over how many docs the word appears in, effectively discarding biases for popular
-# words like 'the'.  
+# words like 'the'.
 from sklearn.feature_extraction.text import TfidfVectorizer
 
 # Cosine similarity
@@ -20,31 +20,31 @@ AGENT_RESPONSES = ("hello, human", "hi", "oh.. hi there", "hello", "hi... I'm a 
 # Percepts = user input
 # Environment = Corpus/GUI Input
 # Action = Return response string
-# Sensors = 
+# Sensors =
 #   * Get input from user (if running CLI version)
 #   * Recieve input from GUI through input field
 # Agent = Emotions: Happy, Disgust, Angry, Sad
-# Actuators = 
+# Actuators =
 
 class Agent:
     def __init__(
-        self, 
-        name=None, 
-        corpus=None, 
-        greetingMessage=None, 
-        defaultMessage=None, 
+        self,
+        name=None,
+        corpus=None,
+        greetingMessage=None,
+        defaultMessage=None,
         goodbyeMessage=None
     ):
         if name is None:
             self.name = "Chatbot"
         else:
             self.name = name
-        
+
         if corpus is None:
-            corpusFile = open('./corpora/default.txt', 'r', errors='ignore')
+            corpusFile = open('./chatbot/corpora/default.txt', 'r', errors='ignore')
             self.environment = corpusFile.read().lower()
         else:
-            corpusFile = open('./corpora/'+corpus, 'r', errors='ignore')
+            corpusFile = open('./chatbot/corpora/'+corpus, 'r', errors='ignore')
             self.environment = corpusFile.read().lower()
 
         if greetingMessage is None:
@@ -97,7 +97,7 @@ class Agent:
     def response(self, userInput):
         agentResponse=''
         self.corpusSentencesActuator.append(userInput)
-        
+
         # Stop words are words that do not contribute to the understanding of text
         # Here, we are using a predefined list of such words.
         TfidfVector = TfidfVectorizer(tokenizer=self.normalize, stop_words='english')
@@ -129,7 +129,7 @@ class Agent:
             else:
                 return (self.name + ": " + self.response(userInputPercept) + "\n")
         else:
-            return (self.goodbyeMessage) 
+            return (self.goodbyeMessage)
 
     def chatCLI(self):
         while True:
@@ -137,7 +137,7 @@ class Agent:
             userInputPercept = userInputPercept.lower()
 
             print(self.action(userInputPercept))
-            
+
             if(userInputPercept == "bye"):
                 break
 
@@ -148,4 +148,4 @@ class Agent:
     #       member function is being used.
     #
     def chat(self, userInputPercept):
-        self.action(userInputPercept)
+        return self.action(userInputPercept)
