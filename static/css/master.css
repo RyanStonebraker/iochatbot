@@ -21,6 +21,8 @@
 body {
   margin: 0;
   padding: 0;
+  font-family: "Inconsolata";
+  font-size: 150%;
 }
 section.stage {
   width: 100vw;
@@ -47,6 +49,7 @@ section.stage article.bot {
 section.stage article.bot h1 {
   margin: 0;
   margin-bottom: 5px;
+  margin-top: 2px;
   text-transform: capitalize;
 }
 section.stage article.bot textarea {
@@ -57,6 +60,7 @@ section.stage article.bot textarea {
   height: 50px;
   outline: none;
   text-align: center;
+  font-size: 15px;
 }
 section.stage article.bot.angry {
   top: 7%;
@@ -91,6 +95,7 @@ section.stage article.bot.user form {
 section.stage article.bot.user form input {
   width: 90%;
   margin-bottom: 5px;
+  font-size: 25px;
 }
 div.line {
   width: 1px;

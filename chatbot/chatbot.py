@@ -1,8 +1,35 @@
-from . import agent
+import uuid
+from . import agent as sadAgent
 
-def getResponse(agentName, userInput):
-    response = agentName
-    if agentName == "sad":
-        sadAgent = agent.Agent()
-        response = sadAgent.chat(userInput).replace("Chatbot: ", "")
-    return response
+class Environment:
+    conversationHistory = {
+        "sad": [],
+        "happy": [],
+        "disgust": [],
+        "angry": []
+    }
+    agents = {
+        "sad": None,
+        "happy": None,
+        "disgust": None,
+        "angry": None
+    }
+    db = None
+
+    def __init__(self, database):
+        self.db = database
+        self.agents["sad"] = sadAgent.Agent(corpus="sadPoems.txt")
+        self.conversationUUID = str(uuid.uuid4())
+
+    def getResponse(self, agentName, userInput):
+        response = agentName
+        if self.agents[agentName]:
+            response = self.agents[agentName].chat(userInput).replace("Chatbot: ", "")
+
+        self.conversationHistory[agentName].append({
+            "userInput": userInput,
+            "response": response
+        })
+        self.db.collection(u'conversations').document(self.conversationUUID).set(self.conversationHistory)
+
+        return response
