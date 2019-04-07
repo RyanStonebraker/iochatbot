@@ -1,34 +1,14 @@
-@keyframes wiggle {
-  0% {
-    transform: translate(0, 0);
-  }
-  20% {
-    transform: translate(5px, 0);
-  }
-  40% {
-    transform: translate(2px, 5px);
-  }
-  60% {
-    transform: translate(-5px, -2px);
-  }
-  80% {
-    transform: translate(0, -5px);
-  }
-  100% {
-    transform: translate(0, 0);
-  }
-}
 body {
   margin: 0;
   padding: 0;
-  font-family: "Inconsolata";
+  font-family: "Fjalla One";
   font-size: 150%;
 }
 section.stage {
   width: 100vw;
   height: 100vh;
   position: absolute;
-  background-image: url('/static/img/brain.png');
+  background: url('/static/img/brain.png');
   background-size: 50%;
   background-repeat: no-repeat;
   background-position: center;
@@ -43,8 +23,9 @@ section.stage article.bot {
   position: absolute;
   transition: all 0.5s ease;
   border-radius: 15px;
-  padding: 5px;
-  padding-top: 0;
+  padding: 15px 5px;
+  padding-top: 2px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
 }
 section.stage article.bot h1 {
   margin: 0;
@@ -57,45 +38,69 @@ section.stage article.bot textarea {
   border-radius: 5px;
   resize: none;
   width: 90%;
-  height: 50px;
+  height: 100px;
   outline: none;
-  text-align: center;
+  padding: 5px;
   font-size: 15px;
+  font-family: "Fjalla One";
+  background-color: rgba(255, 255, 255, 0.75);
 }
 section.stage article.bot.angry {
   top: 7%;
   left: 10%;
-  background-color: red;
+  background: linear-gradient(#f60000, #5d0000);
 }
 section.stage article.bot.happy {
   top: 11%;
   right: 16%;
-  background-color: yellow;
+  background: linear-gradient(#fff679, #dfcf00);
 }
 section.stage article.bot.sad {
   top: 43%;
   left: 4%;
-  background-color: blue;
+  background: linear-gradient(#e9f2f2, #87bbb7);
 }
 section.stage article.bot.disgust {
   top: 38%;
   right: 5%;
-  background-color: green;
+  background: linear-gradient(#00d910, #004005);
 }
 section.stage article.bot.user {
   bottom: 5%;
   left: calc(50% - 15%);
   width: 30%;
-  background-color: lightblue;
+  background: linear-gradient(#cdcdcd, #676767);
 }
 section.stage article.bot.user form {
   width: 100%;
   text-align: center;
 }
-section.stage article.bot.user form input {
+section.stage article.bot.user form input[type="text"] {
   width: 90%;
   margin-bottom: 5px;
   font-size: 25px;
+  outline: none;
+  border: none;
+  font-family: "Fjalla One";
+  transition: all 0.5s ease;
+}
+section.stage article.bot.user form input[type="text"]:focus {
+  background-color: #efefef;
+  transition: all 0.5s ease;
+}
+section.stage article.bot.user form input[type="submit"] {
+  margin-top: 5px;
+  border: none;
+  outline: none;
+  font-size: 25px;
+  width: 90%;
+  font-family: "Fjalla One";
+  transition: all 0.5s ease;
+}
+section.stage article.bot.user form input[type="submit"]:hover {
+  background-color: lightgrey;
+  transition: all 0.5s ease;
+  cursor: pointer;
 }
 div.line {
   width: 1px;

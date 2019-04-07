@@ -1,33 +1,14 @@
-@keyframes wiggle {
-  0% {
-    transform: translate(0,0);
-  }
+@primary-font: "Fjalla One";
+@secondary-font: "Fjalla One";
 
-  20% {
-    transform: translate(5px, 0);
-  }
-
-  40% {
-    transform: translate(2px, 5px);
-  }
-
-  60% {
-    transform: translate(-5px, -2px);
-  }
-
-  80% {
-    transform: translate(0, -5px);
-  }
-
-  100% {
-    transform: translate(0, 0);
-  }
+.bg-gradient(@color: red, @lighten: 0, @darken: 10%) {
+  background: linear-gradient(lighten(@color, @lighten), darken(@color, @darken));
 }
 
 body {
   margin: 0;
   padding: 0;
-  font-family: "Inconsolata";
+  font-family: @primary-font;
   font-size: 150%;
 }
 
@@ -36,7 +17,7 @@ section.stage {
   height: 100vh;
   position: absolute;
 
-  background-image: url('/static/img/brain.png');
+  background: url('/static/img/brain.png');
   background-size: 50%;
   background-repeat: no-repeat;
   background-position: center;
@@ -51,13 +32,11 @@ section.stage {
     position: absolute;
     transition: all 0.5s ease;
 
-    // animation-duration: 3s;
-    // animation-name: wiggle;
-    // animation-iteration-count: infinite;
-
     border-radius: 15px;
-    padding: 5px;
-    padding-top: 0;
+    padding: 15px 5px;
+    padding-top: 2px;
+
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
 
     h1 {
       margin: 0;
@@ -71,50 +50,78 @@ section.stage {
       border-radius: 5px;
       resize: none;
       width: 90%;
-      height: 50px;
+      height: 100px;
       outline: none;
-      text-align: center;
+      // text-align: center;
+      padding: 5px;
       font-size: 15px;
+      font-family: @secondary-font;
+      background-color: rgba(255, 255, 255, 0.75);
     }
   }
 
   article.bot.angry {
     top: 7%;
     left: 10%;
-    background-color: red;
+    .bg-gradient(rgb(195,0,0), 10%, 20%);
   }
 
   article.bot.happy {
     top: 11%;
     right: 16%;
-    background-color: yellow;
+    .bg-gradient(rgb(255,242,70), 10%, 20%);
   }
 
   article.bot.sad {
     top: 43%;
     left: 4%;
-    background-color: blue;
+    .bg-gradient(#c8e0de, 10%, 20%);
   }
 
   article.bot.disgust {
     top: 38%;
     right: 5%;
-    background-color: green;
+    .bg-gradient(rgb(0,166,12), 10%, 20%);
   }
 
   article.bot.user {
     bottom: 5%;
     left: calc(50% - 15%);
     width: 30%;
-    background-color: lightblue;
+    .bg-gradient(grey, 30%);
     form {
       width: 100%;
       text-align: center;
 
-      input {
+      input[type="text"] {
         width: 90%;
         margin-bottom: 5px;
         font-size: 25px;
+        outline: none;
+        border: none;
+        font-family: @secondary-font;
+        transition: all 0.5s ease;
+      }
+
+      input[type="text"]:focus {
+        background-color: #efefef;
+        transition: all 0.5s ease;
+      }
+
+      input[type="submit"] {
+        margin-top: 5px;
+        border: none;
+        outline: none;
+        font-size: 25px;
+        width: 90%;
+        font-family: @primary-font;
+        transition: all 0.5s ease;
+      }
+
+      input[type="submit"]:hover {
+        background-color: lightgrey;
+        transition: all 0.5s ease;
+        cursor: pointer;
       }
     }
   }
