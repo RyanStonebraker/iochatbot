@@ -25,11 +25,12 @@ class Environment:
         response = agentName
         if self.agents[agentName]:
             response = self.agents[agentName].chat(userInput).replace("Chatbot: ", "")
+            print(response)
 
         self.conversationHistory[agentName].append({
             "userInput": userInput,
             "response": response
         })
-        self.db.collection(u'conversations').document(self.conversationUUID).set(self.conversationHistory)
+        # self.db.collection(u'conversations').document(self.conversationUUID).set(self.conversationHistory)
 
         return response

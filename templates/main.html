@@ -4,14 +4,14 @@
 {% block body %}
   <section class="stage">
     {% for agent in agents %}
-      <article class="bot {{agent.name}}">
-        <h1>{{agent.name}}</h1>
-        <textarea readonly>{{agent.response}}</textarea>
+      <article class="bot {{agent}}">
+        <h1>{{agent}}</h1>
+        <textarea readonly></textarea>
       </article>
     {% endfor %}
     <article class="bot user">
       <h1>User</h1>
-      <form action="/" method="post">
+      <form id="userInput" action="/response" method="post">
         <input type="text" name="query" value="" placeholder="{{previousQuestion}}">
         <input type="submit"></input>
       </form>
