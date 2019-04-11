@@ -37,7 +37,8 @@ class Agent:
         greetingMessage="My name is {0} The Chatbot!\nIf you want to leave, type 'bye'",
         defaultMessage="Sorry, I don't understand.",
         goodbyeMessage="See ya later!",
-        verbose=True
+        verbose=True,
+        cacheCorpus=True
         ):
         self.name = name
         self.corpus = corpus
@@ -45,21 +46,26 @@ class Agent:
         self.defaultMessage = defaultMessage
         self.goodbyeMessage = goodbyeMessage
         self.verbose = verbose
+        self.cacheCorpus = True
 
-        with open("{0}/{1}".format(self.corporaDirectory, self.corpus), "r") as corpusFile:
-            self.environment = re.sub(r"\s+", " ", corpusFile.read().lower())
+        if self.cacheCorpus:
+            self.loadCorpus()
 
         nltk.download('punkt')
         nltk.download('wordnet')
-
-        self.corpusSentencesActuator = nltk.sent_tokenize(self.environment)
-        self.corpusWordsActuator = nltk.word_tokenize(self.environment)
 
         # Tokenization and normalization handlers
         self.lemmer = nltk.stem.WordNetLemmatizer()
         self.removePunctuation = dict((ord(punct), None) for punct in string.punctuation)
 
         self.introduction()
+
+    def loadCorpus(self):
+        with open("{0}/{1}".format(self.corporaDirectory, self.corpus), "r") as corpusFile:
+            self.environment = re.sub(r"\s+", " ", corpusFile.read().lower())
+
+        self.corpusSentencesActuator = nltk.sent_tokenize(self.environment)
+        self.corpusWordsActuator = nltk.word_tokenize(self.environment)
 
 
     def introduction(self):
@@ -136,4 +142,6 @@ class Agent:
     #       member function is being used.
     #
     def chat(self, userInputPercept):
+        if not self.cacheCorpus:
+            self.loadCorpus()
         return self.action(userInputPercept)

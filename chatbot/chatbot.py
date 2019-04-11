@@ -1,5 +1,6 @@
 import uuid
-from . import agent as sadAgent
+from . import agent
+from . import templateEngine
 
 class Environment:
     conversationHistory = {
@@ -14,17 +15,27 @@ class Environment:
         "disgust": None,
         "angry": None
     }
+    templatingEngines = {
+        "sad": None,
+        "happy": None,
+        "disgust": None,
+        "angry": None
+    }
     db = None
 
     def __init__(self, database):
         self.db = database
-        self.agents["sad"] = sadAgent.Agent(corpus="sadPoems.txt", verbose=False)
+        self.agents["sad"] = agent.Agent(corpus="sadPoems.txt", verbose=False)
+        self.templatingEngines["angry"] = templateEngine.TemplateEngine(corpus="friendsLines.txt", commonWords="angryWords.txt", emotion="angry")
+        self.agents["angry"] = agent.Agent(corpus="generated/angry.txt", verbose=False, cacheCorpus=False)
         self.conversationUUID = str(uuid.uuid4())
 
     def getResponse(self, agentName, userInput):
         response = agentName
         if self.agents[agentName]:
-            response = self.agents[agentName].chat(userInput).replace("Chatbot: ", "")
+            if self.templatingEngines[agentName]:
+                self.templatingEngines[agentName].generateFile(userInput)
+            response = self.agents[agentName].chat(userInput)
 
         self.conversationHistory[agentName].append({
             "userInput": userInput,

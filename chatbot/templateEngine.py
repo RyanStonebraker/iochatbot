@@ -141,8 +141,8 @@ class TemplateEngine():
             #     response.append(self.replaceContextWord(word, [word], "verb", 60, lastWord))
             else:
                 response.append(word)
-
-        return " ".join(response)
+        sentenceResponse = " ".join(response)
+        return sentenceResponse
 
     def chat(self, userInput):
         userInput = userInput.translate(str.maketrans('', '', string.punctuation)).split(" ")
@@ -162,7 +162,11 @@ class TemplateEngine():
 
             for _ in range(0, 100):
                 template = self.chooseSentenceTemplate(subjects)
-                emoFile.write(self.inferTemplateContext(subjects, template) + ".\n")
+                try:
+                    response = self.inferTemplateContext(subjects, template) + ".\n"
+                    emoFile.write(response)
+                except:
+                    continue
 
 if __name__ == "__main__":
     bot = TemplateEngine(corpus="friendsLines.txt")
