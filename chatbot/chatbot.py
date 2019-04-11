@@ -28,6 +28,7 @@ class Environment:
         self.agents["sad"] = agent.Agent(corpus="sadPoems.txt", verbose=False)
         self.templatingEngines["angry"] = templateEngine.TemplateEngine(corpus="friendsLines.txt", commonWords="angryWords.txt", emotion="angry")
         self.agents["angry"] = agent.Agent(corpus="generated/angry.txt", verbose=False, cacheCorpus=False)
+        self.agents["happy"] = agent.Agent(corpus="happy.txt", verbose=False)
         self.conversationUUID = str(uuid.uuid4())
 
     def getResponse(self, agentName, userInput):
