@@ -23,117 +23,117 @@ commonAngryWords = [
     "pissed"
 ]
 
-def switchPronouns(word):
-    swapList = [
-        ("you", "I"),
-        ("your", "my"),
-        ("yours", "mine")
-    ]
-    for firstSide, secondSide in swapList:
-        if word == firstSide:
-            word = secondSide
-        elif word == secondSide:
-            word = firstSide
-    word = word.replace("me", "you")
+class AngryBot():
+    def __init__(self, corpus="", commonWords=""):
+        nltk.download('averaged_perceptron_tagger')
+        nltk.download('tagsets')
 
-    return word
+        self.nounType = ["PRP", "PRP$", "NN", "NNS", "NNP", "NNPS"]
+        self.adjectiveType = ["JJ", "JJR", "JJS"]
+        self.verbType = ["VB", "VBD", "VBG", "VBN", "VBP", "VBZ"]
 
-def identifySubjects(categorizedSentence):
-    subjects = []
-    nounType = ["PRP", "PRP$", "NN", "NNS", "NNP", "NNPS"]
-    for word, type in categorizedSentence:
-        if type in nounType:
-            word = switchPronouns(word)
-            subjects.append(word)
-    return subjects
+        self.templates = self.tagDataset(sampleSentences)
+        self.associatedWords = self.simplifyLabels(commonAngryWords)
 
-def tagDataset(dataset):
-    taggedData = []
-    for sentence in dataset:
-        taggedData.append(nltk.pos_tag(sentence.lower().split(" ")))
-    return taggedData
+    def switchPronouns(self, word):
+        swapList = [
+            ("you", "I"),
+            ("your", "my"),
+            ("yours", "mine")
+        ]
+        for firstSide, secondSide in swapList:
+            if word == firstSide:
+                word = secondSide
+            elif word == secondSide:
+                word = firstSide
+        word = word.replace("me", "you")
 
-def simplifyLabels(words):
-    simplifiedLabels = {
-        "noun": [],
-        "verb": [],
-        "adjective": []
-    }
-    taggedWords = tagDataset(words)
+        return word
 
-    nounType = ["PRP", "PRP$", "NN", "NNS", "NNP", "NNPS"]
-    adjectiveType = ["JJ", "JJR", "JJS"]
-    verbType = ["VB", "VBD", "VBG", "VBN", "VBP", "VBZ"]
+    def identifySubjects(self, categorizedSentence):
+        subjects = []
+        for word, type in categorizedSentence:
+            if type in self.nounType:
+                word = self.switchPronouns(word)
+                subjects.append(word)
+        return subjects
 
-    for taggedWord in taggedWords:
-        for word, type in taggedWord:
-            if type in nounType:
-                simplifiedLabels["noun"].append(word)
-            elif type in adjectiveType:
-                simplifiedLabels["adjective"].append(word)
-            elif type in verbType:
-                simplifiedLabels["verb"].append(word)
+    def tagDataset(self, dataset):
+        taggedData = []
+        for sentence in dataset:
+            taggedData.append(nltk.pos_tag(sentence.lower().split(" ")))
+        return taggedData
 
-    return simplifiedLabels
+    def simplifyLabels(self, words):
+        simplifiedLabels = {
+            "noun": [],
+            "verb": [],
+            "adjective": []
+        }
+        taggedWords = self.tagDataset(words)
 
-def chooseSentenceTemplate(subjects, templates):
-    for sentence in templates:
-        templateSubjects = identifySubjects(sentence)
-        matchingSubjectCount = 0
-        for subject in templateSubjects:
-            if subject in subjects:
-                matchingSubjectCount += 1
-                sentenceProbability = 100 * (1 - 1/(1 + matchingSubjectCount))
-                if random.randint(1, 100) > sentenceProbability:
-                    return sentence
+        for taggedWord in taggedWords:
+            for word, type in taggedWord:
+                if type in self.nounType:
+                    simplifiedLabels["noun"].append(word)
+                elif type in self.adjectiveType:
+                    simplifiedLabels["adjective"].append(word)
+                elif type in self.verbType:
+                    simplifiedLabels["verb"].append(word)
 
-    return random.choice(templates)
+        return simplifiedLabels
 
-def replaceContextWord(associatedWords, currentWord, subjects, type, mutation=80, lastWord=""):
-    if random.randint(1, 100) > mutation:
-        for _ in range(0, 5):
-            randomAssociatedWord = random.choice(associatedWords[type])
-            if randomAssociatedWord != lastWord:
-                return random.choice(associatedWords[type])
-    else:
-        randomSubject = random.choice(subjects)
-        return randomSubject if lastWord != randomSubject else currentWord
+    def chooseSentenceTemplate(self, subjects):
+        for sentence in self.templates:
+            templateSubjects = self.identifySubjects(sentence)
+            matchingSubjectCount = 0
+            for subject in templateSubjects:
+                if subject in subjects:
+                    matchingSubjectCount += 1
+                    sentenceProbability = 100 * (1 - 1/(1 + matchingSubjectCount))
+                    if random.randint(1, 100) > sentenceProbability:
+                        return sentence
 
+        return random.choice(self.templates)
 
-def inferTemplateContext(subjects, template, associatedWords):
-    response = []
-
-    nounType = ["PRP", "PRP$", "NN", "NNS", "NNP", "NNPS"]
-    adjectiveType = ["JJ", "JJR", "JJS"]
-    verbType = ["VB", "VBD", "VBG", "VBN", "VBP", "VBZ"]
-
-    for word, type in template:
-        lastWord = response[-1] if len(response) else ""
-        if type in nounType:
-            response.append(replaceContextWord(associatedWords, word, subjects, "noun", 60, lastWord))
-        elif type in adjectiveType:
-            response.append(replaceContextWord(associatedWords, word, [word], "adjective", 85, lastWord))
-        elif type in verbType:
-            response.append(replaceContextWord(associatedWords, word, [word], "verb", 60, lastWord))
+    def replaceContextWord(self, currentWord, subjects, type, mutation=80, lastWord=""):
+        if random.randint(1, 100) > mutation:
+            for _ in range(0, 5):
+                randomAssociatedWord = random.choice(self.associatedWords[type])
+                if randomAssociatedWord != lastWord:
+                    return random.choice(self.associatedWords[type])
         else:
-            response.append(word)
+            randomSubject = random.choice(subjects)
+            return randomSubject if lastWord != randomSubject else currentWord
 
-    return " ".join(response)
+
+    def inferTemplateContext(self, subjects, template):
+        response = []
+
+        for word, type in template:
+            lastWord = response[-1] if len(response) else ""
+            if type in self.nounType:
+                response.append(self.replaceContextWord(word, subjects, "noun", 60, lastWord))
+            elif type in self.adjectiveType:
+                response.append(self.replaceContextWord(word, [word], "adjective", 85, lastWord))
+            elif type in self.verbType:
+                response.append(self.replaceContextWord(word, [word], "verb", 60, lastWord))
+            else:
+                response.append(word)
+
+        return " ".join(response)
+
+    def chat(self, userInput):
+        userInput = userInput.translate(str.maketrans('', '', string.punctuation)).split(" ")
+        categorizedSentence = nltk.pos_tag(userInput)
+
+        subjects = self.identifySubjects(categorizedSentence)
+        template = self.chooseSentenceTemplate(subjects)
+
+        return self.inferTemplateContext(subjects, template)
 
 if __name__ == "__main__":
-    nltk.download('averaged_perceptron_tagger')
-    nltk.download('tagsets')
-    # Remove punctuation, lowercase
-    sentence = input("Enter: ").lower()
-    sentence = sentence.translate(str.maketrans('', '', string.punctuation)).split(" ")
-    categorizedSentence = nltk.pos_tag(sentence)
+    bot = AngryBot()
+    userInput = input("Enter: ")
 
-    subjects = identifySubjects(categorizedSentence)
-
-    templates = tagDataset(sampleSentences)
-    associatedWords = simplifyLabels(commonAngryWords)
-
-    template = chooseSentenceTemplate(subjects, templates)
-    response = inferTemplateContext(subjects, template, associatedWords)
-
-    print(response)
+    print(bot.chat(userInput))
