@@ -2,38 +2,25 @@ import nltk
 import string
 import random
 
-sampleSentences = [
-    "I am doing great.",
-    "The world outside is nice.",
-    "I want to punch something.",
-    "Yellow is the color of happiness.",
-    "I'm sorry I hurt your feelings when I called you stupid. I honestly thought you already knew.",
-    "Pissed off that Spotify isn't an app that turns you into a leopard."
-]
-
-commonAngryWords = [
-    "angry",
-    "mad",
-    "bad",
-    "stupid",
-    "fire",
-    "red",
-    "punch",
-    "fist",
-    "pissed"
-]
-
 class AngryBot():
-    def __init__(self, corpus="", commonWords=""):
+    def __init__(self, corpus="angrySentences.txt", commonWords="angryWords.txt"):
         nltk.download('averaged_perceptron_tagger')
         nltk.download('tagsets')
+
+        self.corporaDirectory = "chatbot/corpora"
 
         self.nounType = ["PRP", "PRP$", "NN", "NNS", "NNP", "NNPS"]
         self.adjectiveType = ["JJ", "JJR", "JJS"]
         self.verbType = ["VB", "VBD", "VBG", "VBN", "VBP", "VBZ"]
 
-        self.templates = self.tagDataset(sampleSentences)
-        self.associatedWords = self.simplifyLabels(commonAngryWords)
+        with open("{0}/{1}".format(self.corporaDirectory, corpus), "r") as corpusReader:
+            rawCorpus = corpusReader.read().replace("\n", " ").strip().split(".")
+            rawCorpus = [angrySentence for angrySentence in rawCorpus if angrySentence]
+            self.templates = self.tagDataset(rawCorpus)
+
+        with open("{0}/{1}".format(self.corporaDirectory, commonWords), "r") as commonWordReader:
+            commonWords = [line.strip().replace("\n", "") for line in commonWordReader.readlines()]
+            self.associatedWords = self.simplifyLabels(commonWords)
 
     def switchPronouns(self, word):
         swapList = [
@@ -61,7 +48,7 @@ class AngryBot():
     def tagDataset(self, dataset):
         taggedData = []
         for sentence in dataset:
-            taggedData.append(nltk.pos_tag(sentence.lower().split(" ")))
+            taggedData.append(nltk.pos_tag(sentence.strip().lower().split(" ")))
         return taggedData
 
     def simplifyLabels(self, words):
