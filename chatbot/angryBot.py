@@ -48,7 +48,11 @@ class AngryBot():
     def tagDataset(self, dataset):
         taggedData = []
         for sentence in dataset:
-            taggedData.append(nltk.pos_tag(sentence.strip().lower().split(" ")))
+            try:
+                taggedSentence = nltk.pos_tag(sentence.strip().lower().split(" "))
+                taggedData.append(taggedSentence)
+            except:
+                continue
         return taggedData
 
     def simplifyLabels(self, words):
@@ -120,7 +124,7 @@ class AngryBot():
         return self.inferTemplateContext(subjects, template)
 
 if __name__ == "__main__":
-    bot = AngryBot()
+    bot = AngryBot(corpus="friendsLines.txt")
     userInput = input("Enter: ")
 
     print(bot.chat(userInput))
