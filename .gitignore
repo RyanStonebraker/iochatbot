@@ -1,2 +1,3 @@
 __pycache__
 insideoutchatbot-firebase-adminsdk*.json
+chatbot/corpora/generated/*.txt

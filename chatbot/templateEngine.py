@@ -2,11 +2,12 @@ import nltk
 import string
 import random
 
-class AngryBot():
-    def __init__(self, corpus="angrySentences.txt", commonWords="angryWords.txt"):
+class TemplateEngine():
+    def __init__(self, corpus="angrySentences.txt", commonWords="angryWords.txt", emotion="angry"):
         nltk.download('averaged_perceptron_tagger')
         nltk.download('tagsets')
 
+        self.emotion = emotion
         self.corporaDirectory = "chatbot/corpora"
 
         self.nounType = ["PRP", "PRP$", "NN", "NNS", "NNP", "NNPS"]
@@ -89,7 +90,11 @@ class AngryBot():
                     if random.randint(1, 100) > sentenceProbability:
                         return sentence
 
-        return random.choice(self.templates)
+        for _ in range(0, 5):
+            randomTemplate = random.choice(self.templates)
+            if randomTemplate:
+                return randomTemplate
+        return randomTemplate
 
     def replaceContextWord(self, currentWord, subjects, type, mutation=80, lastWord=""):
         if type in self.associatedWords and random.randint(1, 100) < mutation:
@@ -148,8 +153,19 @@ class AngryBot():
 
         return self.inferTemplateContext(subjects, template)
 
+    def generateFile(self, userInput):
+        with open("{0}/generated/{1}".format(self.corporaDirectory, "{0}.txt".format(self.emotion)), "w") as emoFile:
+            userInput = userInput.translate(str.maketrans('', '', string.punctuation)).split(" ")
+            categorizedSentence = nltk.pos_tag(userInput)
+
+            subjects = self.identifySubjects(categorizedSentence)
+
+            for _ in range(0, 100):
+                template = self.chooseSentenceTemplate(subjects)
+                emoFile.write(self.inferTemplateContext(subjects, template) + ".\n")
+
 if __name__ == "__main__":
-    bot = AngryBot(corpus="friendsLines.txt")
+    bot = TemplateEngine(corpus="friendsLines.txt")
     userInput = input("Enter: ")
 
-    print(bot.chat(userInput))
+    bot.generateFile(userInput)
