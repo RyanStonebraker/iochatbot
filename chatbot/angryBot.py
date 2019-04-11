@@ -57,20 +57,24 @@ class AngryBot():
 
     def simplifyLabels(self, words):
         simplifiedLabels = {
-            "noun": [],
-            "verb": [],
-            "adjective": []
+            # "noun": [],
+            # "verb": [],
+            # "adjective": []
         }
         taggedWords = self.tagDataset(words)
 
         for taggedWord in taggedWords:
             for word, type in taggedWord:
-                if type in self.nounType:
-                    simplifiedLabels["noun"].append(word)
-                elif type in self.adjectiveType:
-                    simplifiedLabels["adjective"].append(word)
-                elif type in self.verbType:
-                    simplifiedLabels["verb"].append(word)
+                if type in simplifiedLabels:
+                    simplifiedLabels[type].append(word)
+                else:
+                    simplifiedLabels[type] = [word]
+                # if type in self.nounType:
+                #     simplifiedLabels["noun"].append(word)
+                # elif type in self.adjectiveType:
+                #     simplifiedLabels["adjective"].append(word)
+                # elif type in self.verbType:
+                #     simplifiedLabels["verb"].append(word)
 
         return simplifiedLabels
 
@@ -88,7 +92,7 @@ class AngryBot():
         return random.choice(self.templates)
 
     def replaceContextWord(self, currentWord, subjects, type, mutation=80, lastWord=""):
-        if random.randint(1, 100) > mutation:
+        if type in self.associatedWords and random.randint(1, 100) < mutation:
             for _ in range(0, 5):
                 randomAssociatedWord = random.choice(self.associatedWords[type])
                 if randomAssociatedWord != lastWord:
@@ -101,14 +105,35 @@ class AngryBot():
     def inferTemplateContext(self, subjects, template):
         response = []
 
+        replaceTypes = {
+            "NN": 60,
+            "NNS": 60,
+            "NNP": 60,
+            "NNPS": 60,
+            "PRP": 60,
+            "PRP$": 60,
+            "VB": 50,
+            "VBD": 50,
+            "VBG": 50,
+            "VBN": 50,
+            "VBP": 50,
+            "VBZ": 50,
+            "JJ": 75,
+            "JJR": 75,
+            "JJS": 75
+        }
+
         for word, type in template:
             lastWord = response[-1] if len(response) else ""
-            if type in self.nounType:
-                response.append(self.replaceContextWord(word, subjects, "noun", 60, lastWord))
-            elif type in self.adjectiveType:
-                response.append(self.replaceContextWord(word, [word], "adjective", 85, lastWord))
-            elif type in self.verbType:
-                response.append(self.replaceContextWord(word, [word], "verb", 60, lastWord))
+            if type in replaceTypes:
+                defaultOptions = subjects if type in self.nounType else [word]
+                response.append(self.replaceContextWord(word, defaultOptions, type, replaceTypes[type], lastWord))
+            # if type in self.nounType:
+            #     response.append(self.replaceContextWord(word, subjects, "noun", 60, lastWord))
+            # elif type in self.adjectiveType:
+            #     response.append(self.replaceContextWord(word, [word], "adjective", 75, lastWord))
+            # elif type in self.verbType:
+            #     response.append(self.replaceContextWord(word, [word], "verb", 60, lastWord))
             else:
                 response.append(word)
 
