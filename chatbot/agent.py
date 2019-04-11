@@ -46,7 +46,7 @@ class Agent:
         self.defaultMessage = defaultMessage
         self.goodbyeMessage = goodbyeMessage
         self.verbose = verbose
-        self.cacheCorpus = True
+        self.cacheCorpus = cacheCorpus
 
         if self.cacheCorpus:
             self.loadCorpus()
