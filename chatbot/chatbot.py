@@ -18,14 +18,13 @@ class Environment:
 
     def __init__(self, database):
         self.db = database
-        self.agents["sad"] = sadAgent.Agent(corpus="sadPoems.txt")
+        self.agents["sad"] = sadAgent.Agent(corpus="sadPoems.txt", verbose=False)
         self.conversationUUID = str(uuid.uuid4())
 
     def getResponse(self, agentName, userInput):
         response = agentName
         if self.agents[agentName]:
             response = self.agents[agentName].chat(userInput).replace("Chatbot: ", "")
-            print(response)
 
         self.conversationHistory[agentName].append({
             "userInput": userInput,

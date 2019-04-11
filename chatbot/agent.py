@@ -2,6 +2,7 @@ import nltk
 import numpy as np
 import random
 import string
+import re
 
 # Term Frequency-Inverse Document Frequency (TF-IDF)
 # This bag of words heuristic weighs word scores based on the total number of docs
@@ -27,40 +28,26 @@ AGENT_RESPONSES = ("hello, human", "hi", "oh.. hi there", "hello", "hi... I'm a 
 # Actuators =
 
 class Agent:
+    corporaDirectory = "chatbot/corpora"
+
     def __init__(
         self,
-        name=None,
-        corpus=None,
-        greetingMessage=None,
-        defaultMessage=None,
-        goodbyeMessage=None
-    ):
-        if name is None:
-            self.name = "Chatbot"
-        else:
-            self.name = name
+        name="Chatbot",
+        corpus='default.txt',
+        greetingMessage="My name is {0} The Chatbot!\nIf you want to leave, type 'bye'",
+        defaultMessage="Sorry, I don't understand.",
+        goodbyeMessage="See ya later!",
+        verbose=True
+        ):
+        self.name = name
+        self.corpus = corpus
+        self.greetingMessage = greetingMessage.format(self.name)
+        self.defaultMessage = defaultMessage
+        self.goodbyeMessage = goodbyeMessage
+        self.verbose = verbose
 
-        if corpus is None:
-            corpusFile = open('./chatbot/corpora/default.txt', 'r', errors='ignore')
-            self.environment = corpusFile.read().lower()
-        else:
-            corpusFile = open('./chatbot/corpora/'+corpus, 'r', errors='ignore')
-            self.environment = corpusFile.read().lower()
-
-        if greetingMessage is None:
-            self.greetingMessage = self.name + ": My name is " + self.name + " The Chatbot!\nIf you want to leave, type 'bye'"
-        else:
-            self.greetingMessage = self.name + ": " + greetingMessage
-
-        if defaultMessage is None:
-            self.defaultMessage = "Sorry, I don't understand."
-        else:
-            self.defaultMessage = defaultMessage
-
-        if goodbyeMessage is None:
-            self.goodbyeMessage = self.name + ": See ya later!"
-        else:
-            self.goodbyeMessage = self.name + ": " + goodbyeMessage
+        with open("{0}/{1}".format(self.corporaDirectory, self.corpus), "r") as corpusFile:
+            self.environment = re.sub(r"\s+", " ", corpusFile.read().lower())
 
         nltk.download('punkt')
         nltk.download('wordnet')
@@ -76,12 +63,12 @@ class Agent:
 
 
     def introduction(self):
-        print("\n\n")
-        print("**********************************")
-        print("***** Inside Out Chatbot CLI *****")
-        print("**********************************")
-        print("\n")
-        print(self.greetingMessage)
+        if self.verbose:
+            welcomeMessage  = "**********************************\n"
+            welcomeMessage += "***** Inside Out Chatbot CLI *****\n"
+            welcomeMessage += "**********************************\n"
+            print(welcomeMessage)
+            print(self.greetingMessage)
 
     def lemanizeTokens(self, tokens):
         return [self.lemmer.lemmatize(token) for token in tokens]
@@ -108,7 +95,7 @@ class Agent:
         flat.sort()
         resultantTermFrequency = flat[-2]
 
-        if(resultantTermFrequency == 0):
+        if (resultantTermFrequency == 0):
             agentResponse = agentResponse + self.defaultMessage
             self.corpusSentencesActuator.remove(userInput)
             return agentResponse
@@ -123,20 +110,21 @@ class Agent:
         return userInputPercept
 
     def action(self, userInputPercept):
-        if(userInputPercept != "bye"):
-            if(self.greeting(userInputPercept) != None):
-                return (self.name + ": " + self.greeting(userInputPercept))
-            else:
-                return (self.name + ": " + self.response(userInputPercept) + "\n")
+        response = ""
+        if (userInputPercept != "bye"):
+            greeting = self.greeting(userInputPercept)
+            response = greeting if greeting else self.response(userInputPercept) + "\n"
         else:
-            return (self.goodbyeMessage)
+            response = self.goodbyeMessage
+
+        return response
 
     def chatCLI(self):
         while True:
             userInputPercept = input("Chat: ")
             userInputPercept = userInputPercept.lower()
 
-            print(self.action(userInputPercept))
+            print("{0}: {1}".format(self.name, self.action(userInputPercept)))
 
             if(userInputPercept == "bye"):
                 break
