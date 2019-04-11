@@ -25,7 +25,8 @@ class Environment:
 
     def __init__(self, database):
         self.db = database
-        self.agents["sad"] = agent.Agent(corpus="sadPoems.txt", verbose=False)
+        self.templatingEngines["sad"] = templateEngine.TemplateEngine(corpus="friendsLines.txt", commonWords="sadWords.txt", emotion="sad")
+        self.agents["sad"] = agent.Agent(corpus="generated/sad.txt", verbose=False, cacheCorpus=False)
         self.templatingEngines["angry"] = templateEngine.TemplateEngine(corpus="friendsLines.txt", commonWords="angryWords.txt", emotion="angry")
         self.agents["angry"] = agent.Agent(corpus="generated/angry.txt", verbose=False, cacheCorpus=False)
         self.agents["happy"] = agent.Agent(corpus="happy.txt", verbose=False)
