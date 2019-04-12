@@ -3,14 +3,14 @@ import datetime
 from flask import Flask, render_template, request, make_response, jsonify
 from chatbot import chatbot
 
-import firebase_admin
-from firebase_admin import credentials
-from firebase_admin import firestore
-
-cred = credentials.Certificate("insideoutchatbot-firebase-adminsdk-xmiwj-b04745e37d.json")
-firebase_admin.initialize_app(cred)
-
-db = firestore.client()
+# import firebase_admin
+# from firebase_admin import credentials
+# from firebase_admin import firestore
+#
+# cred = credentials.Certificate("insideoutchatbot-firebase-adminsdk-xmiwj-b04745e37d.json")
+# firebase_admin.initialize_app(cred)
+#
+# db = firestore.client()
 
 app = Flask(__name__)
 
@@ -48,5 +48,5 @@ def response():
     return jsonify(agent)
 
 if __name__ == "__main__":
-    environment = chatbot.Environment(db)
+    environment = chatbot.Environment(None)
     app.run(debug=True, port=5001)

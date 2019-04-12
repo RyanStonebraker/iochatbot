@@ -123,7 +123,7 @@ class TemplateEngine():
             "VBN": 50,
             "VBP": 50,
             "VBZ": 50,
-            "JJ": 75,
+            "JJ": 90,
             "JJR": 75,
             "JJS": 75
         }
