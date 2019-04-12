@@ -25,11 +25,19 @@ class Environment:
 
     def __init__(self, database):
         self.db = database
-        self.templatingEngines["sad"] = templateEngine.TemplateEngine(corpus="friendsLines.txt", commonWords="sadWords.txt", emotion="sad")
+
+        self.templatingEngines["sad"] = templateEngine.TemplateEngine(corpus="sadFriendsTemplates.txt", commonWords="sadWords.txt", emotion="sad")
         self.agents["sad"] = agent.Agent(corpus="generated/sad.txt", verbose=False, cacheCorpus=False)
-        self.templatingEngines["angry"] = templateEngine.TemplateEngine(corpus="friendsLines.txt", commonWords="angryWords.txt", emotion="angry")
+
+        self.templatingEngines["angry"] = templateEngine.TemplateEngine(corpus="angryFriendsTemplates.txt", commonWords="angryWords.txt", emotion="angry")
         self.agents["angry"] = agent.Agent(corpus="generated/angry.txt", verbose=False, cacheCorpus=False)
-        self.agents["happy"] = agent.Agent(corpus="happy.txt", verbose=False)
+
+        self.templatingEngines["happy"] = templateEngine.TemplateEngine(corpus="happyFriendsTemplates.txt", commonWords="happyWords.txt", emotion="happy")
+        self.agents["happy"] = agent.Agent(corpus="generated/happy.txt", verbose=False, cacheCorpus=False)
+
+        self.templatingEngines["disgust"] = templateEngine.TemplateEngine(corpus="disgustFriendsTemplates.txt", commonWords="disgust_words.txt", emotion="disgust")
+        self.agents["disgust"] = agent.Agent(corpus="generated/disgust.txt", verbose=False, cacheCorpus=False)
+
         self.conversationUUID = str(uuid.uuid4())
 
     def getResponse(self, agentName, userInput):
