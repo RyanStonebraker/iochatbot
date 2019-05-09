@@ -2549,7 +2549,6 @@ nagged
 nailed
 naive
 naked
-namby pamby
 nameless
 nannied
 nappy
@@ -2989,18 +2988,8 @@ pushed forward
 pushed in
 pushy
 pusillanimous
-put away
-put down
-put out
-put upon
-put down
 puzzled
 psychedelic
-
-
-
-
-
 quaint
 quaking
 qualified
@@ -3024,11 +3013,6 @@ quivery
 quixotic
 quizzed
 quizzical
-
-
-
-
-
 rad
 radiant
 radical
@@ -3113,7 +3097,6 @@ relentless
 reliable
 reliant
 relieved
-
 religious
 reluctant
 remedied
@@ -3177,8 +3160,6 @@ reverent
 reviled
 revitalized
 revisited
-
-
 revived
 revolted
 revolting
